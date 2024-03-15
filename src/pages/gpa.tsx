@@ -15,6 +15,21 @@ enum Grade {
     F = 'F'
 }
 
+const gradeToGpa = {
+  [Grade.A]: 4.0,
+  [Grade.A_MINUS]: 3.7,
+  [Grade.B_PLUS]: 3.3,
+  [Grade.B]: 3.0,
+  [Grade.B_MINUS]: 2.7,
+  [Grade.C_PLUS]: 2.3,
+  [Grade.C]: 2.0,
+  [Grade.C_MINUS]: 1.7,
+  [Grade.D_PLUS]: 1.3,
+  [Grade.D]: 1.0,
+  [Grade.D_MINUS]: .7,
+  [Grade.F]: 0
+}
+
 interface CourseGrade {
     name: string,
     credits: number,
@@ -23,6 +38,7 @@ interface CourseGrade {
 
 export default function GpaPage() {
   const [courses, setCourses] = useState<CourseGrade[]>([]);
+  const [gpa, setGpa] = useState<number>(0);
   const [name, setName] = useState<string>('');
   const [credits, setCredits] = useState<number>(0);
   const [grade, setGrade] = useState<Grade>(Grade.A);
@@ -40,9 +56,14 @@ export default function GpaPage() {
   } 
 
   function calculateGrade() {
-    // TODO
     console.log('calculating grade!');
-    return;
+    let gpaGradeSum = 0;
+    let gpaCreditsSum = 0;
+    courses.forEach(grade => {
+      gpaGradeSum += (gradeToGpa[grade.grade] * grade.credits)
+      gpaCreditsSum += grade.credits
+    });
+    setGpa(gpaGradeSum / gpaCreditsSum);
   } 
 
   return (
@@ -68,7 +89,8 @@ export default function GpaPage() {
       </select>
     <button onClick={addCourses}>Add course</button>
     </div>
-    {/* <button onClick={calculateGrade}>Calculate GPA</button> */}
+    <h2>{gpa}</h2>
+    <button onClick={calculateGrade}>Calculate GPA</button>
     </>
   )
 }
